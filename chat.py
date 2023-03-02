@@ -1,4 +1,5 @@
 import openai, pyperclip
+now = datetime.now()
 
 openai.api_key = "yourkeyhere"
 
@@ -52,6 +53,20 @@ def chatgpt():
             except:
                 print("Error in editing log")
                 continue
+         if text == "save":
+            chatlog = []
+            for message in messages:
+                if message["role"] == "user":
+                    chatlog.append("User: " + message["content"])
+                elif message["role"] == "assistant":
+                    chatlog.append("\nAssistant: " + message["content"])
+            now = datetime.now()
+            # format the date/time string as yyyymmdd HH:MM
+            formatted_date = now.strftime('%Y%m%d %H:%M')
+            with open(formatted_date + ".txt", "w") as file:
+                for string in chatlog:
+                    file.write(string + "\n")
+            continue
         if text == "copy":
             printnumberlines(messages)
             pyperclip.copy(messages[-1]["content"])
