@@ -71,6 +71,10 @@ def chatgpt():
             printnumberlines(messages)
             pyperclip.copy(messages[-1]["content"])
             continue
+        if text == "help":
+            print(
+                "• Typing 'copy' will copy the last output from the bot\n• Typing 'paste' will paste your clipboard as a query - this way you can craft prompts in a text editor for multi-line queries\n• 'save' will save the chat into a text file with the filename YYYYMMDD HHMM.txt\n• '@', 'sel', or 'select' will allow you to select lines to delete (handy if the chat is getting a bit long and you want to save on costs)\n• '!', 'del', or 'delete' will clear the chat log and start fresh")
+            continue
         messages.append({"role": "user", "content": text})
         response = getresponse(messages)
         response = response['choices'][0]['message']
