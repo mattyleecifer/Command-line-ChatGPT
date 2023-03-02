@@ -9,7 +9,7 @@ I've added a few things to make it more useful in the CLI:
 - '!', 'del', or 'delete' will clear the chat log and start fresh
 
 # Installation
-You will need to have the most updated OpenAI python package (pip install --upgrade openai).
-You will need Pyperclip for copy/paste functions (pip install pyperclip)
-Paste your OpenAI key into line 3 of the script where it says 'yourkeyhere'
+- You will need to have the most updated OpenAI python package (pip install --upgrade openai).
+- You will need Pyperclip for copy/paste functions (pip install pyperclip)
+- Paste your OpenAI key into line 3 of the script where it says 'yourkeyhere'
 
