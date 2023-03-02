@@ -1,5 +1,5 @@
 import openai, pyperclip
-now = datetime.now()
+from datetime import datetime
 
 openai.api_key = "yourkeyhere"
 
@@ -62,7 +62,7 @@ def chatgpt():
                     chatlog.append("\nAssistant: " + message["content"])
             now = datetime.now()
             # format the date/time string as yyyymmdd HH:MM
-            formatted_date = now.strftime('%Y%m%d %H:%M')
+            formatted_date = now.strftime('%Y%m%d %H%M')
             with open(formatted_date + ".txt", "w") as file:
                 for string in chatlog:
                     file.write(string + "\n")
