@@ -9,6 +9,7 @@ I've added a few things to make it more useful in the CLI:
 - '@', 'sel', or 'select' will allow you to select lines to delete (handy if the chat is getting a bit long and you want to save on costs)
 - '!', 'del', or 'delete' will clear the chat log and start fresh
 - 'help' will bring up a help menu with this information
+- 'q' or 'quit will quit the program
 
 # Installation
 - You will need to have the most updated OpenAI python package (pip install --upgrade openai).
