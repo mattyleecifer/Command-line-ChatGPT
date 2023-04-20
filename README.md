@@ -3,6 +3,7 @@ My implementation of the official ChatGPT API
 
 # Features
 I've added a few things to make it more useful in the CLI:
+- Typing 'code' will enter a coding mode where it will generate a list of steps first before outputting code - this should generate higher quality code than usual\n
 - Typing 'copy' will copy the last output from the bot
 - Typing 'paste' will paste your clipboard as a query - this way you can craft prompts in a text editor for multi-line queries
 - 'save' will save the chat into a text file with the filename YYYYMMDD HHMM.txt
