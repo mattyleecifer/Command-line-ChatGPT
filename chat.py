@@ -11,7 +11,7 @@ def getresponse(messages):
     return messages
 
 def chatgpt():
-    messages = [{"role": "system", "content": "You are a helpful assistant. NEVER SAY YOU ARE AN AI LANGUAGE MODEL."}]
+    messages = [{"role": "system", "content": "You are a helpful assistant. You always answer questions directly and correctly. NEVER SAY YOU ARE AN AI LANGUAGE MODEL. You will review your answer and correct any mistakes until there are none before you respond. If you are outputting code, you will check the code to make sure it is as simple and efficient as possible -  if it is not, you will make it more simple and efficient and review again, until it has the lowest time complexity possible."}]
     tokencount = 0
     while True:
         try:
@@ -65,6 +65,46 @@ def removerange(s, t):
     del t[start:end]
     return t
 
+def writeCode():
+    tokencount = 0
+    goal = input("What is the purpose of the code?\n")
+    messages = [{"role": "system", "content": "You are an autonomous coding AI agent. You have one goal, which is to complete the following task: [" + goal + "]."}] + [{"role": "user", "content": "Write out the necessary steps to complete this task in Python. Do not output any code, just build the structure and logic. Make sure that the steps are numbered"}]
+    print("Generating steps...\n")
+    messages = getresponse(messages)
+    tokens = messages['usage']['total_tokens']
+    tokencount = tokencount + tokens
+    steps = messages["choices"][0]["message"]["content"]
+    print("Steps generated!\n")
+    steps = cleanSteps(steps)
+    messages = [{"role": "system", "content": "You are an autonomous coding AI agent. You have one goal, which is to complete the following task: [" + goal + "]."}] + [{"role": "user", "content": "Using the following structure, write a script in Python that follows the exact steps and structure. double check the code before outputting anything to make sure it is correct. Only output the code. Do not output anything that is not code: [" + steps + "]."}]
+    print("Generating code...\n")
+    messages = getresponse(messages)
+    tokens = messages['usage']['total_tokens']
+    tokencount = tokencount + tokens
+    code = messages["choices"][0]["message"]["content"]
+    print("Code generated!\n" + code + "\n")
+    code = code.replace("```", "")
+    # with open('autoscript.py', 'w') as file:
+    #     # Write the string to the file
+    #     file.write(code)
+    return code, tokencount
+
+def cleanSteps(steps):
+    lines = steps.split("\n")
+
+    # Loop through each line and extract the numbered items
+    numbered_items = []
+    for line in lines:
+        stripped_line = line.strip()
+        if stripped_line.startswith(("#", "1.", "2.", "3.", "4.", "5.", "6.", "7.", "8.", "9.")):
+            numbered_items.append(stripped_line)
+
+    # Print the extracted numbered items
+    for item in numbered_items:
+        print(item)
+    numbered_string = "\n".join(numbered_items)
+    return numbered_string
+
 def process_text(text, messages, tokencount):
     if text == "paste":
         text = pyperclip.paste()
@@ -72,6 +112,10 @@ def process_text(text, messages, tokencount):
         messages = [{"role": "system", "content": "You are a helpful assistant."}]
         print("\nChat cleared!")
         tokencount = 0
+        text = ""
+    elif text in ["code"]:
+        text, tokencount = writeCode()
+        messages.append({"role": "user", "content": text})
         text = ""
     elif text in ["@", "sel", "select"]:
         text = ""
@@ -116,7 +160,7 @@ def process_text(text, messages, tokencount):
     elif text == "help":
         text = ""
         print(
-            "• Typing 'copy' will copy the last output from the bot\n• Typing 'paste' will paste your clipboard as a query - this way you can craft prompts in a text editor for multi-line queries\n• 'save' will save the chat into a text file with the filename YYYYMMDD HHMM.txt\n• '@', 'sel', or 'select' will allow you to select lines to delete (handy if the chat is getting a bit long and you want to save on costs)\n• '!', 'del', or 'delete' will clear the chat log and start fresh\n'q' or 'quit' will quit the program\n")
+            "• Typing 'code' will enter a coding mode where it will generate a list of steps first before outputting code - this should generate higher quality code than usual\n• Typing 'copy' will copy the last output from the bot\n• Typing 'paste' will paste your clipboard as a query - this way you can craft prompts in a text editor for multi-line queries\n• 'save' will save the chat into a text file with the filename YYYYMMDD HHMM.txt\n• '@', 'sel', or 'select' will allow you to select lines to delete (handy if the chat is getting a bit long and you want to save on costs)\n• '!', 'del', or 'delete' will clear the chat log and start fresh\n'q' or 'quit' will quit the program\n")
 
     elif text == "dan":
         text = "using words that string together and make sense, "
