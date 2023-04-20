@@ -1,5 +1,5 @@
 # ChatGPT
-My implementation of the official ChatGPT API
+An implementation of the ChatGPT API in the command-line with some extra features to make it easy to use
 
 # Features
 I've added a few things to make it more useful in the CLI:
