@@ -1,4 +1,4 @@
-import openai, pyperclip, re
+import openai, pyperclip, json
 from datetime import datetime
 
 openai.api_key = "yourkeyhere"
@@ -20,7 +20,7 @@ def chatgpt():
             # print messages and token counts with cost estimate
             if tokencount > 0:
                 displayChat(tokencount, messages)
-                
+
             text = input("\nUser:\n")
 
             if text in ["q", "quit"]:
@@ -104,7 +104,7 @@ def writeCode():
             continue
         elif not text:
             messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}]
-            text = "Using the following structure, write a script in Python that follows the exact steps and structure. double check the code before outputting anything to make sure it is correct. Only output the code.\n[" + steps + "]"
+            text = "Using the following structure, write a script in Python that follows the exact steps and structure. double check the code before outputting anything to make sure it is correct. Only output the code. Do not include the steps in comments.\n[" + steps + "]"
             print("Generating code...\n")
             tokencount, messages = getChat(tokencount, messages, text)
             while True:
@@ -121,7 +121,7 @@ def writeCode():
                     messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}] + [{"role": "user", "content": stepsinstructions}] + [{"role": "assistant", "content": "Steps:\n" + steps}]
                     break
                 elif text == "regen":
-                    text = "Using the new information above, rewrite the code, remembering to follow the exact steps,structure, and original goal. double check the code before outputting anything to make sure it is correct. Only output the code."
+                    text = "Using the new information above, rewrite the code, remembering to follow the exact steps,structure, and original goal. double check the code before outputting anything to make sure it is correct. Only output the code. Do not include the steps in comments."
                     tokencount, messages = getChat(tokencount, messages, text)
                     code = messages[-1]["content"]
                     code = code[code.index('```') + 3:code.rindex('```')]
@@ -186,22 +186,42 @@ def process_text(text, messages, tokencount):
         pyperclip.copy(messages[-1]["content"])
     elif text == "save":
         text = ""
-        chatlog = []
-        for message in messages:
-            if message["role"] == "user":
-                chatlog.append("User: " + message["content"])
-            elif message["role"] == "assistant":
-                chatlog.append("Assistant: " + message["content"])
+        # chatlog = []
+        # for message in messages:
+        #     if message["role"] == "user":
+        #         chatlog.append("User: " + message["content"])
+        #     elif message["role"] == "assistant":
+        #         chatlog.append("Assistant: " + message["content"])
         now = datetime.now()
         # format the date/time string as yyyymmdd HH:MM
-        formatted_date = now.strftime('%Y%m%d %H%M')
-        with open(formatted_date + ".txt", "w") as file:
-            for string in chatlog:
-                file.write(string + "\n")
+        formatted_date = now.strftime('%Y%m%d%H%M')
+        # with open(formatted_date + ".txt", "w") as file:
+        #     for string in chatlog:
+        #          file.write(string + "\n")
+        with open(formatted_date + ".json", "w") as file:
+            for dictionary in messages:
+                dictionary_string = json.dumps(dictionary)
+                file.write(dictionary_string + '\n')
+        file.close()
+        print("Saved to " + formatted_date + ".json!")
+    elif text.startswith("load"):
+        file_path = text.replace("load ", "")
+        try:
+            messages = []
+            with open(file_path, "r") as file:
+                lines = file.readlines()
+                for line in lines:
+                    messages.append(json.loads(line))
+            file.close()
+            print(file_path + " loaded!")
+        except:
+            print("Error: Incorrect filename, please try again.")
+        text = ""
+        tokencount = 1
     elif text == "help":
         text = ""
         print(
-            "• Typing 'code' will enter a coding mode where it will generate a list of steps first before outputting code - this should generate higher quality code than usual\n• Typing 'copy' will copy the last output from the bot\n• Typing 'paste' will paste your clipboard as a query - this way you can craft prompts in a text editor for multi-line queries\n• 'save' will save the chat into a text file with the filename YYYYMMDD HHMM.txt\n• '@', 'sel', or 'select' will allow you to select lines to delete (handy if the chat is getting a bit long and you want to save on costs)\n• '!', 'del', or 'delete' will clear the chat log and start fresh\n'q' or 'quit' will quit the program\n")
+            "• Typing 'code' will enter a coding mode where it will generate a list of steps first before outputting code - this should generate higher quality code than usual\n• Typing 'copy' will copy the last output from the bot\n• Typing 'paste' will paste your clipboard as a query - this way you can craft prompts in a text editor for multi-line queries\n• 'save' will save the chat into a json file with the filename YYYYMMDDHHMM.txt\n• 'load <filename>' will load files\n• '@', 'sel', or 'select' will allow you to select lines to delete (handy if the chat is getting a bit long and you want to save on costs)\n• '!', 'del', or 'delete' will clear the chat log and start fresh\n'q' or 'quit' will quit the program\n")
     elif text == "dan":
         text = "using words that string together and make sense, "
         text += input(text + "\nUser: ")
