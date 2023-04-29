@@ -15,7 +15,8 @@ To use any of these features, just type the command into the terminal.
 | Delete Chat History | `!`, `del`, or `delete` | Clears the chat log and starts fresh. |
 | Help Menu | `help` | Brings up a help menu with this information. |
 | Quit Program | `q` or `quit` | Exits the program. |
-|<img width=190/>|<img width=240/>||
+| Token Counter || The program will tell you how many tokens you have used for the current session and also the estimated cost. |
+|<img width=210/>|<img width=240/>||
 
 # Installation
 1. Make sure you have Python3 installed on your system. If you don't have it installed, download and install it from [here](https://www.python.org/downloads/).
@@ -25,6 +26,7 @@ To use any of these features, just type the command into the terminal.
    ```
    git clone https://github.com/mattyleecifer/TerminalGenie.git
    ```
+   Or click the green 'Code' button on the top right of this repository and choose 'Download ZIP' (or whatever option you prefer)
 3. Navigate to the project directory on your terminal.
 
 4. Run the following command to install all the necessary packages:
@@ -33,7 +35,14 @@ To use any of these features, just type the command into the terminal.
    pip install -r requirements.txt
    ```
 
-5. Once the packages are installed, paste your OpenAI key into line 4 of tg.py where it says 'yourkeyhere'.
+5. Run 'setkey.py' to set the API key - if you don't have an OpenAI API key, you can get one [here](https://platform.openai.com/account/api-keys).
+   ```
+   python3 setkey.py
+   
+   or 
+   
+   py setkey.py
+   ```
 
 6. Run tg.py in terminal
 
