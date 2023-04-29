@@ -2,6 +2,8 @@
 An implementation of the ChatGPT API in the command-line with some extra features to make it easy to use.
 
 # Features
+To use any of these features, just type the command into the terminal. 
+
 | Function | Command | Description |
 | --- | --- | --- |
 | Code Mode | `code` | Generates a list of steps first before outputting code. The function is interactive, so you can discuss the plan and generated code with the bot and regenerate new plans and new code based on the discussion. |
