@@ -3,7 +3,7 @@ from datetime import datetime
 
 openai.api_key = "yourkeyhere"
 
-default = "You are a helpful assistant. Please generate truthful, accurate, and honest responses while also keeping your answers succinct and to-the-point. Strive to provide the most reliable and precise information possible based on your available knowledge and understanding."
+default = "You are a helpful assistant. Please generate truthful, accurate, and honest responses while also keeping your answers succinct and to-the-point."
 
 def getresponse(messages):
     res = openai.ChatCompletion.create(
