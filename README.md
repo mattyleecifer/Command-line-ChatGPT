@@ -28,13 +28,13 @@ To use any of these features, just type the command into the terminal.
    ```
    Or click the green 'Code' button on the top right of this repository and choose 'Download ZIP' (or whatever option you prefer)
 3. Navigate to the project directory on your terminal.
-
+   ```
+   cd /installation/directory
+   ```
 4. Run the following command to install all the necessary packages:
-
    ```
    pip install -r requirements.txt
    ```
-
 5. Run 'setkey.py' to set the API key - if you don't have an OpenAI API key, you can get one [here](https://platform.openai.com/account/api-keys).
    ```
    python3 setkey.py
@@ -43,9 +43,7 @@ To use any of these features, just type the command into the terminal.
    
    py setkey.py
    ```
-
 6. Run tg.py in terminal
-
    ```
    python3 tg.py
    
