@@ -16,7 +16,7 @@ An implementation of the ChatGPT API in the command-line with some extra feature
 |<img width=190/>|<img width=240/>||
 
 # Installation
-1. Make sure you have Python installed on your system. If you don't have it installed, download and install it from [here](https://www.python.org/downloads/).
+1. Make sure you have Python3 installed on your system. If you don't have it installed, download and install it from [here](https://www.python.org/downloads/).
 
 2. Clone this GitHub repository to your local machine by running the following command in your terminal:
 
@@ -34,3 +34,11 @@ An implementation of the ChatGPT API in the command-line with some extra feature
 5. Once the packages are installed, paste your OpenAI key into line 4 of tg.py where it says 'yourkeyhere'.
 
 6. Run tg.py in terminal
+
+   ```
+   python3 tg.py
+   
+   or 
+   
+   py tg.py
+   ```
