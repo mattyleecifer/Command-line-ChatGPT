@@ -35,7 +35,7 @@ def chatgpt():
             pass
 
 def displayChat(tokencount, messages):
-    print("\nAssistant: " + messages[-1]["content"])
+    print("\nAssistant:\n" + messages[-1]["content"])
     print("\nToken count: " + str(tokencount) + "    Estimated costs: $" + str((tokencount / 1000) * 0.002))
 
 
@@ -90,8 +90,7 @@ def writeCode():
     steps = cleanSteps(steps)
     print("\nSteps generated!\n")
     while True:
-        if tokencount > 0:
-            displayChat(tokencount, messages)
+        displayChat(tokencount, messages)
         text = input("\n\n\nIf the steps look good, press enter to continue. Otherwise, talk to the AI to see if it can be improved. Type 'regen' to regenerate steps after a conversation\n\n")
         if text in ["q", "quit"]:
             return "", 0
@@ -103,14 +102,20 @@ def writeCode():
             messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}] + [{"role": "user", "content": stepsinstructions}] + [{"role": "assistant", "content": "Steps:\n" + steps}]
             continue
         elif not text:
-            messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}]
-            text = "Using the following structure, write a script in Python that follows the exact steps and structure. double check the code before outputting anything to make sure it is correct. Only output the code. Do not include the steps in comments.\n[" + steps + "]"
+            if len(messages) > 4:
+                ans = input("Do you want to keep the previous conversation? Y/N\n").lower()
+                if ans.startswith('n'):
+                    messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}]
+                    text = "Using the following structure, write a script in Python that follows the exact steps and structure. double check the code before outputting anything to make sure it is correct. Only output the code. Do not include the steps in comments.\n\nStructure:\n[" + steps + "]"
+                else:
+                    text = "Using the above information, write a script in Python that follows the exact steps, structure, and original goal. double check the code before outputting anything to make sure it is correct. Only output the code. Do not include the steps in comments.\n"
             print("Generating code...\n")
             tokencount, messages = getChat(tokencount, messages, text)
+            code = messages[-1]["content"]
+            code = code[code.index('```') + 3:code.rindex('```')]
+            messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}] + [{"role": "assistant", "content": "Code:\n" + code}]
+            print("Code generated!\n")
             while True:
-                code = messages[-1]["content"]
-                code = code[code.index('```') + 3:code.rindex('```')]
-                print("Code generated!\n")
                 displayChat(tokencount, messages)
                 text = input("\n\n\nIf the code looks good, press enter to continue. Otherwise, talk to the AI to see if it can be improved\n\n")
                 if text in ["q", "quit"]:
@@ -121,11 +126,11 @@ def writeCode():
                     messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}] + [{"role": "user", "content": stepsinstructions}] + [{"role": "assistant", "content": "Steps:\n" + steps}]
                     break
                 elif text == "regen":
-                    text = "Using the new information above, rewrite the code, remembering to follow the exact steps,structure, and original goal. double check the code before outputting anything to make sure it is correct. Only output the code. Do not include the steps in comments."
+                    text = "Using the new information above, rewrite the code. double check the code before outputting anything to make sure it is correct. Only output the code. Do not include the steps in comments."
                     tokencount, messages = getChat(tokencount, messages, text)
                     code = messages[-1]["content"]
                     code = code[code.index('```') + 3:code.rindex('```')]
-                    messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}] + [{"role": "assistant", "content": "Steps:\n" + steps}] + [{"role": "assistant", "content": "Code:\n" + code}]
+                    messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}] + [{"role": "assistant", "content": "Code:\n" + code}]
                     continue
                 text, messages, tokencount = process_text(text, messages, tokencount)
                 tokencount, messages = getChat(tokencount, messages, text)
