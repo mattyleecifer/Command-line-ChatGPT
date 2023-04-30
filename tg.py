@@ -102,13 +102,12 @@ def writeCode():
             messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}] + [{"role": "user", "content": stepsinstructions}] + [{"role": "assistant", "content": "Steps:\n" + steps}]
             continue
         elif not text:
+            text = "Using the above information, write a script in Python that follows the exact steps, structure, and original goal. double check the code before outputting anything to make sure it is correct. Only output the code. Do not include the steps in comments.\n"
             if len(messages) > 4:
                 ans = input("Do you want to keep the previous conversation? Y/N\n").lower()
                 if ans.startswith('n'):
                     messages = [{"role": "system", "content": agenttext}] + [{"role": "system", "content": goal}]
                     text = "Using the following structure, write a script in Python that follows the exact steps and structure. double check the code before outputting anything to make sure it is correct. Only output the code. Do not include the steps in comments.\n\nStructure:\n[" + steps + "]"
-                else:
-                    text = "Using the above information, write a script in Python that follows the exact steps, structure, and original goal. double check the code before outputting anything to make sure it is correct. Only output the code. Do not include the steps in comments.\n"
             print("Generating code...\n")
             tokencount, messages = getChat(tokencount, messages, text)
             code = messages[-1]["content"]
