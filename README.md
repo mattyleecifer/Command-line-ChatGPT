@@ -1,4 +1,7 @@
 # TerminalGenie
+
+Note: This project has now been rewritten in Golang and combined into [AgentSmith](https://github.com/mattyleecifer/AgentSmith).
+
 An implementation of the ChatGPT API in the command-line with some extra features to make it easy to use.
 
 # Features
